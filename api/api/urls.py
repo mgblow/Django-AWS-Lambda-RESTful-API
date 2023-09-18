@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls import handler500
+from api import handlers
 
+handler500 = handlers.custom_500_error_handler  # Set the custom error handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from django.http import JsonResponse
-from devices.models import Device  
+from devices.models import Device
 from devices.views import DeviceCreateView
 
 class DeviceCreateViewTestCase(TestCase):
@@ -17,7 +16,7 @@ class DeviceCreateViewTestCase(TestCase):
 
     def test_device_creation(self):
         # Get the initial count of devices in the database
-        initial_device_count = Device.objects.count()
+        initial_device_count = Device.count()  # Use Device.count() to count items
 
         # Use reverse to generate the URL for the DeviceCreateView
         url = reverse("device-create")
@@ -29,7 +28,7 @@ class DeviceCreateViewTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
 
         # Check if a new device was added to the database
-        self.assertEqual(Device.objects.count(), initial_device_count + 1)
+        self.assertEqual(Device.count(), initial_device_count + 1)
 
         # Check if the response data matches the expected JSON response
         expected_response_data = {
@@ -39,7 +38,7 @@ class DeviceCreateViewTestCase(TestCase):
             "note": "Testing a sensor.",
             "serial": "A020000102"
         }
-        self.assertJSONEqual(str(response.content, encoding="utf8"), expected_response_data)
+        self.assertEqual(response.json(), expected_response_data)  # Use response.json() to parse JSON
 
     def test_invalid_device_creation(self):
         # Remove a required field from the device data to make it invalid
@@ -47,7 +46,7 @@ class DeviceCreateViewTestCase(TestCase):
         del invalid_device_data["name"]
 
         # Get the initial count of devices in the database
-        initial_device_count = Device.objects.count()
+        initial_device_count = Device.count()  # Use Device.count() to count items
 
         # Use reverse to generate the URL for the DeviceCreateView
         url = reverse("device-create")
@@ -59,4 +58,4 @@ class DeviceCreateViewTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         # Check if no new device was added to the database
-        self.assertEqual(Device.objects.count(), initial_device_count)
+        self.assertEqual(Device.count(), initial_device_count)

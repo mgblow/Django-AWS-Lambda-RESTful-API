@@ -1,14 +1,12 @@
-# api/models.py
-# This model defines the interface for devices
+from pynamodb.models import Model
+from pynamodb.attributes import UnicodeAttribute
 
-from django.db import models
+class Device(Model):
+    class Meta:
+        table_name = 'task_devices' 
 
-class Device(models.Model):
-    id = models.CharField(max_length=255, unique=True, primary_key=True)
-    deviceModel = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
-    note = models.TextField()
-    serial = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
+    id = UnicodeAttribute(hash_key=True)
+    deviceModel = UnicodeAttribute()
+    name = UnicodeAttribute()
+    note = UnicodeAttribute()
+    serial = UnicodeAttribute()

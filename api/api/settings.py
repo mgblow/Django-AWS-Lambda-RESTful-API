@@ -11,12 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import environ
 from django.core.management.utils import get_random_secret_key
+import os
 
-
-env = environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,14 +77,19 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Set the session engine to use DynamoDB
+SESSION_ENGINE = "django_dynamodb_sessions.backends.dynamodb"
+
+# Configure the DynamoDB settings
+DYNAMODB_SESSIONS_TABLE_NAME = os.environ.get("TABLE_NAME")
+DYNAMODB_AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+DYNAMODB_AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+DYNAMODB_AWS_REGION = "eu-north-1"  # Replace with your AWS region
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
+        'ENGINE': 'django.db.backends.dummy',
+        'NAME': 'task_devices',
     }
 }
 
